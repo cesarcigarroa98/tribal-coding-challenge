@@ -25,7 +25,7 @@ namespace CreditLine.Controllers
             {
                 //Get client's IP address
                 String clientIPAddress = this.Request != null ?
-                    this.Request.HttpContext.Connection.RemoteIpAddress.ToString() : "1234";
+                    this.Request.HttpContext.Connection.RemoteIpAddress.ToString() : "192.168.1.254";
 
                 HttpResponseMessage response = await _credit.VerifyCredit(creditRequest, clientIPAddress);
 
