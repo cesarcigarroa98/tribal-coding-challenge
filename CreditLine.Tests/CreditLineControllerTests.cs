@@ -1,10 +1,9 @@
+using Application.CreditLine;
 using CreditLine.Controllers;
 using CreditLine.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Net;
-using System.Net.Http;
 using Xunit;
 
 namespace CreditLine.Tests
@@ -12,7 +11,7 @@ namespace CreditLine.Tests
     public class CreditLineControllerTests
     {
         [Fact]
-        public void GetCredit_Returns_Bad_Request_Because_Of_Invalid_Numbers()
+        public async void GetCredit_Returns_Bad_Request_Because_Of_Invalid_Numbers()
         {
             CreditRequest creditTest = new CreditRequest
             {
@@ -27,7 +26,7 @@ namespace CreditLine.Tests
             CreditLineController controller = new CreditLineController();
 
             //Get status code from response
-            IActionResult response = controller.GetCredit(creditTest);
+            IActionResult response = await controller.GetCredit(creditTest);
             ObjectResult reponseObjectResult = response as ObjectResult;
 
             //Test
@@ -35,7 +34,7 @@ namespace CreditLine.Tests
         }
 
         [Fact]
-        public void GetCredit_Returns_Bad_Request_Because_Of_Date_In_The_Past()
+        public async void GetCredit_Returns_Bad_Request_Because_Of_Date_In_The_Past()
         {
             CreditRequest creditTest = new CreditRequest
             {
@@ -50,7 +49,7 @@ namespace CreditLine.Tests
             CreditLineController controller = new CreditLineController();
 
             //Get status code from response
-            IActionResult response = controller.GetCredit(creditTest);
+            IActionResult response = await controller.GetCredit(creditTest);
             ObjectResult reponseObjectResult = response as ObjectResult;
 
             //Test
@@ -58,7 +57,7 @@ namespace CreditLine.Tests
         }
 
         [Fact]
-        public void GetCredit_Returns_Bad_Request_Because_Of_Empty_String()
+        public async void GetCredit_Returns_Bad_Request_Because_Of_Empty_String()
         {
             CreditRequest creditTest = new CreditRequest
             {
@@ -73,7 +72,7 @@ namespace CreditLine.Tests
             CreditLineController controller = new CreditLineController();
 
             //Get status code from response
-            IActionResult response = controller.GetCredit(creditTest);
+            IActionResult response = await controller.GetCredit(creditTest);
             ObjectResult reponseObjectResult = response as ObjectResult;
 
             //Test
@@ -81,7 +80,7 @@ namespace CreditLine.Tests
         }
 
         [Fact]
-        public void GetCredit_Returns_Bad_Request_After_Failing_3_Times()
+        public async void GetCredit_Returns_Bad_Request_After_Failing_3_Times()
         {
             CreditRequest creditTest = new CreditRequest
             {
@@ -99,7 +98,7 @@ namespace CreditLine.Tests
             IActionResult response = null;
             for(int i = 0; i < 4; i ++)
             {
-                response = controller.GetCredit(creditTest);
+                response = await controller.GetCredit(creditTest);
             }
             ObjectResult reponseObjectResult = response as ObjectResult;
 
@@ -108,7 +107,7 @@ namespace CreditLine.Tests
         }
 
         [Fact]
-        public void GetCredit_Returns_429_After_Failing_And_Sending_Request_Right_Away()
+        public async void GetCredit_Returns_429_After_Failing_And_Sending_Request_Right_Away()
         {
             CreditRequest creditTest = new CreditRequest
             {
@@ -126,7 +125,7 @@ namespace CreditLine.Tests
             IActionResult response = null;
             for (int i = 0; i < 2; i++)
             {
-                response = controller.GetCredit(creditTest);
+                response = await controller.GetCredit(creditTest);
             }
             ObjectResult reponseObjectResult = response as ObjectResult;
 

@@ -1,8 +1,3 @@
-D:\Desktop\tribal\credit_line\Application\obj\Debug\net5.0\Application.csproj.AssemblyReference.cache
-D:\Desktop\tribal\credit_line\Application\obj\Debug\net5.0\Application.GeneratedMSBuildEditorConfig.editorconfig
-D:\Desktop\tribal\credit_line\Application\obj\Debug\net5.0\Application.AssemblyInfoInputs.cache
-D:\Desktop\tribal\credit_line\Application\obj\Debug\net5.0\Application.AssemblyInfo.cs
-D:\Desktop\tribal\credit_line\Application\obj\Debug\net5.0\Application.csproj.CoreCompileInputs.cache
 D:\Desktop\tribal\credit_line\Application\bin\Debug\net5.0\Application.deps.json
 D:\Desktop\tribal\credit_line\Application\bin\Debug\net5.0\Application.dll
 D:\Desktop\tribal\credit_line\Application\bin\Debug\net5.0\ref\Application.dll
@@ -11,6 +6,11 @@ D:\Desktop\tribal\credit_line\Application\bin\Debug\net5.0\Domain.dll
 D:\Desktop\tribal\credit_line\Application\bin\Debug\net5.0\Persistence.dll
 D:\Desktop\tribal\credit_line\Application\bin\Debug\net5.0\Persistence.pdb
 D:\Desktop\tribal\credit_line\Application\bin\Debug\net5.0\Domain.pdb
+D:\Desktop\tribal\credit_line\Application\obj\Debug\net5.0\Application.csproj.AssemblyReference.cache
+D:\Desktop\tribal\credit_line\Application\obj\Debug\net5.0\Application.GeneratedMSBuildEditorConfig.editorconfig
+D:\Desktop\tribal\credit_line\Application\obj\Debug\net5.0\Application.AssemblyInfoInputs.cache
+D:\Desktop\tribal\credit_line\Application\obj\Debug\net5.0\Application.AssemblyInfo.cs
+D:\Desktop\tribal\credit_line\Application\obj\Debug\net5.0\Application.csproj.CoreCompileInputs.cache
 D:\Desktop\tribal\credit_line\Application\obj\Debug\net5.0\Application.csproj.CopyComplete
 D:\Desktop\tribal\credit_line\Application\obj\Debug\net5.0\Application.dll
 D:\Desktop\tribal\credit_line\Application\obj\Debug\net5.0\ref\Application.dll

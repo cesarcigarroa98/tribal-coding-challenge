@@ -3,6 +3,7 @@ using CreditLine.Models;
 using CreditLine.Validators;
 using Domain;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -27,127 +28,144 @@ namespace Application.CreditLine
             _context = context;
         }
 
-        public async Task<HttpResponseMessage> VerifyCredit (CreditRequest creditRequest)
+        public async Task<HttpResponseMessage> VerifyCredit (CreditRequest creditRequest, String clientIPAddress)
         {
-            using (_context)
+            
+            using (var dbContext = _context.Database.BeginTransaction())
             {
-                using (var dbContext = _context.Database.BeginTransaction())
+                try
                 {
-                    try
+                    //Create response object
+                    HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+
+                    //Validate inputs
+                    CreditValidator validator = new CreditValidator();
+                    ValidationResult result = validator.Validate(creditRequest);
+                    if (!result.IsValid)
                     {
-                        //Create response object
-                        HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+                        response.StatusCode = HttpStatusCode.BadRequest;
+                        response.Content = new StringContent("Credit line rejected");
 
-                        //Validate inputs
-                        CreditValidator validator = new CreditValidator();
-                        ValidationResult result = validator.Validate(creditRequest);
-                        if (!result.IsValid)
+                        return response;
+                    }
+
+                    //Find current client transaction based on ip address
+                    Transaction clientTxn = await _context.Transactions.FirstOrDefaultAsync(
+                        clientTxn => clientTxn.ClientIPAddress == clientIPAddress);
+
+                    //No information found
+                    if (clientTxn == null)
+                    {
+                        //Create user's transaction
+                        Transaction transaction = new Transaction
                         {
-                            response.StatusCode = HttpStatusCode.BadRequest;
-                            response.Content = new StringContent("Credit line rejected");
+                            ClientIPAddress = clientIPAddress,
+                            InvalidRequestsCounter = 0,
+                            RequestsCounter = 0
+                        };
 
+                        await _context.AddAsync(transaction);
+                        await _context.SaveChangesAsync();
+
+                        clientTxn = transaction;
+                    }
+
+                    //There is credit line already accepted for this user
+                    if (clientTxn.LastValidRequest != null)
+                    {
+                        clientTxn.RequestsCounter++;
+                        _context.Update(clientTxn);
+                        await _context.SaveChangesAsync();
+                        await dbContext.CommitAsync();
+
+                        //The system cannot receive 3 or more requests in a 2 minutes period after an
+                        //accepted credit line
+                        double timeGap = (DateTime.Now - (DateTime)clientTxn.LastValidRequest).TotalMinutes;
+                        if (timeGap <= 2 && clientTxn.RequestsCounter > 2)
+                        {
+                            response.StatusCode = HttpStatusCode.TooManyRequests;
                             return response;
                         }
-
-                        //Get client's MAC address. This will be used as an unique identifier
-                        String macAddress = GetMACAddress();
-
-                        //Find current client transaction
-                        Transaction clientTxn = await _context.Transactions.FirstOrDefaultAsync(
-                            clientTxn => clientTxn.ClientsMacAddress == "");
-
-                        //There is credit line already accepted for this user
-                        if (clientTxn.LastValidRequest != null)
+                        else if(timeGap > 2 && clientTxn.RequestsCounter > 2)
                         {
-                            clientTxn.RequestsCounter++;
+                            //Reset counter
+                            clientTxn.RequestsCounter = 0;
+                            _context.Update(clientTxn);
                             await _context.SaveChangesAsync();
-                            dbContext.Commit();
 
-                            //The system cannot receive 3 or more requests in a 2 minutes period after an
-                            //accepted credit line
-                            double timeGap = (DateTime.Now - (DateTime)clientTxn.LastValidRequest).TotalMinutes;
-                            if (timeGap <= 2 && clientTxn.RequestsCounter > 2)
-                            {
-                                response.StatusCode = HttpStatusCode.TooManyRequests;
-                                return response;
-                            }
-                            else if(timeGap > 2 && clientTxn.RequestsCounter > 2)
-                            {
-                                //Reset counter
-                                clientTxn.RequestsCounter = 0;
-                                await _context.SaveChangesAsync();
-
-                                response.Content = new StringContent("Credit line already accepted");
-                                return response;
-                            }
-                            else
-                            {
-                                response.Content = new StringContent("Credit line already accepted");
-                                return response;
-                            }
-                        }
-
-                        //There is an invalid request from this user
-                        if (clientTxn.LastInvalidRequest != null)
-                        {
-                            //The system cannot receive a new requests in a 30 seconds period after a
-                            //rejected credit line
-                            double timeGap = (DateTime.Now - (DateTime)clientTxn.LastValidRequest).TotalSeconds;
-                            if (timeGap < 30)
-                            {
-                                return new HttpResponseMessage(HttpStatusCode.TooManyRequests);
-                            }
-
-                        }
-
-                        //Verify the credit application
-                        if (IsValidCrdApplication(creditRequest))
-                        {
-                            clientTxn.LastValidRequest = DateTime.Now;
-                            await _context.SaveChangesAsync();
-                            dbContext.Commit();
-
-                            response.Content = new StringContent("Credit line accepted");
-
+                            response.Content = new StringContent("Credit line already accepted");
                             return response;
-
                         }
                         else
                         {
-                            clientTxn.InvalidRequestsCounter++;
-                            clientTxn.LastInvalidRequest = DateTime.Now;
-                            await _context.SaveChangesAsync();
-                            dbContext.Commit();
+                            response.Content = new StringContent("Credit line already accepted");
+                            return response;
+                        }
+                    }
 
-                            //Client has failed 3 times
-                            if (clientTxn.InvalidRequestsCounter > 2)
-                            {
-                                response.StatusCode = HttpStatusCode.BadRequest;
-                                response.Content = new StringContent("A sales agent will contact you");
+                    //There is an invalid request from this user
+                    if (clientTxn.LastInvalidRequest != null)
+                    {
+                        //The system cannot receive a new requests in a 30 seconds period after a
+                        //rejected credit line
+                        double timeGap = (DateTime.Now - (DateTime)clientTxn.LastValidRequest).TotalSeconds;
+                        if (timeGap < 30)
+                        {
+                            return new HttpResponseMessage(HttpStatusCode.TooManyRequests);
+                        }
 
-                                return response;
-                            }
+                    }
 
+                    //Verify the credit application
+                    if (IsValidCrdApplication(creditRequest))
+                    {
+                        clientTxn.LastValidRequest = DateTime.Now;
+                        _context.Update(clientTxn);
+                        await _context.SaveChangesAsync();
+                        await dbContext.CommitAsync();
+
+                        response.Content = new StringContent("Credit line accepted");
+
+                        return response;
+
+                    }
+                    else
+                    {
+                        clientTxn.InvalidRequestsCounter++;
+                        clientTxn.LastInvalidRequest = DateTime.Now;
+                        _context.Update(clientTxn);
+                        await _context.SaveChangesAsync();
+                        await dbContext.CommitAsync();
+
+                        //Client has failed 3 times
+                        if (clientTxn.InvalidRequestsCounter > 2)
+                        {
                             response.StatusCode = HttpStatusCode.BadRequest;
-                            response.Content = new StringContent("Credit line rejected");
+                            response.Content = new StringContent("A sales agent will contact you");
 
                             return response;
                         }
 
+                        response.StatusCode = HttpStatusCode.BadRequest;
+                        response.Content = new StringContent("Credit line rejected");
+
+                        return response;
                     }
-                    catch (Exception) 
+
+                }
+                catch (Exception) 
+                {
+                    await dbContext.RollbackAsync();
+
+                    return new HttpResponseMessage()
                     {
-                        dbContext.Rollback();
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Content = new StringContent("Credit line rejected")
+                    };
 
-                        return new HttpResponseMessage()
-                        {
-                            StatusCode = HttpStatusCode.BadRequest,
-                            Content = new StringContent("Credit line rejected")
-                        };
-
-                    }
                 }
             }
+            
         }
 
         private static bool IsValidCrdApplication(global::CreditLine.Models.CreditRequest creditRequest)
@@ -171,12 +189,6 @@ namespace Application.CreditLine
 
             return false;
         }
-
-        private String GetMACAddress()
-        {
-            return "";
-        }
-
 
     }
 }

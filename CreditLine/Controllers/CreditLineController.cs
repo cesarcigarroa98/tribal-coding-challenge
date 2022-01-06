@@ -1,11 +1,9 @@
-﻿using Application.CreditLine;
-using CreditLine.Models;
+﻿using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Persistence;
 using System;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CreditLine.Controllers
 {
@@ -13,18 +11,22 @@ namespace CreditLine.Controllers
     [ApiController]
     public class CreditLineController : ControllerBase
     {
-        private Credit _credit;
-        public CreditLineController(Credit credit)
-        {
-            _credit = credit;
-        }
+        private ICredit _credit;
+        protected ICredit Credit => _credit ??= HttpContext.RequestServices
+            .GetService<ICredit>();
+        //public CreditLineController(ICredit credit)
+        //{
+        //    _credit = credit;
+        //}
 
         [HttpPost("GetCredit")]
         public async Task<IActionResult> GetCredit(Models.CreditRequest creditRequest)
         {
             try
             {
-                HttpResponseMessage response = await _credit.VerifyCredit(creditRequest);
+                String clientIPAddress = this.Request.HttpContext.Connection.RemoteIpAddress.ToString();
+
+                HttpResponseMessage response = await _credit.VerifyCredit(creditRequest, clientIPAddress);
 
                 return StatusCode((int)response.StatusCode, response.Content);
 
