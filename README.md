@@ -72,6 +72,29 @@ To run tests, run the following commands
 
 
 
+## Arquitecture
+
+The solution contains 5 projects written in C#:
+
+* CreditLine.Tests: test cases
+* API: contains the controller
+* Aplication: application's business logic
+* Persistence: DB connection
+* Domain: DB classes
+
+
+Projects' references:
+
+* CreditLineTests --> API
+* API --> Application
+* Application --> Persistence
+* Persistence --> Domain
+
+Using this arquitecture allows to separate concerns and organize code in a better way.
+
+
+
+
 ## Authors
 
 - [@cesarcigarroa](https://www.github.com/cesarcigarroa98)
