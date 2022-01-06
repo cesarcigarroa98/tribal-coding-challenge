@@ -1,0 +1,12 @@
+D:\Desktop\tribal\credit_line\Domain\bin\Debug\net5.0\Domain.deps.json
+D:\Desktop\tribal\credit_line\Domain\bin\Debug\net5.0\Domain.dll
+D:\Desktop\tribal\credit_line\Domain\bin\Debug\net5.0\ref\Domain.dll
+D:\Desktop\tribal\credit_line\Domain\bin\Debug\net5.0\Domain.pdb
+D:\Desktop\tribal\credit_line\Domain\obj\Debug\net5.0\Domain.csproj.AssemblyReference.cache
+D:\Desktop\tribal\credit_line\Domain\obj\Debug\net5.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\Desktop\tribal\credit_line\Domain\obj\Debug\net5.0\Domain.AssemblyInfoInputs.cache
+D:\Desktop\tribal\credit_line\Domain\obj\Debug\net5.0\Domain.AssemblyInfo.cs
+D:\Desktop\tribal\credit_line\Domain\obj\Debug\net5.0\Domain.csproj.CoreCompileInputs.cache
+D:\Desktop\tribal\credit_line\Domain\obj\Debug\net5.0\Domain.dll
+D:\Desktop\tribal\credit_line\Domain\obj\Debug\net5.0\ref\Domain.dll
+D:\Desktop\tribal\credit_line\Domain\obj\Debug\net5.0\Domain.pdb

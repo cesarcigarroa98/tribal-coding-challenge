@@ -1,0 +1,15 @@
+D:\Desktop\tribal\credit_line\Persistence\bin\Debug\net5.0\Persistence.deps.json
+D:\Desktop\tribal\credit_line\Persistence\bin\Debug\net5.0\Persistence.dll
+D:\Desktop\tribal\credit_line\Persistence\bin\Debug\net5.0\ref\Persistence.dll
+D:\Desktop\tribal\credit_line\Persistence\bin\Debug\net5.0\Persistence.pdb
+D:\Desktop\tribal\credit_line\Persistence\bin\Debug\net5.0\Domain.dll
+D:\Desktop\tribal\credit_line\Persistence\bin\Debug\net5.0\Domain.pdb
+D:\Desktop\tribal\credit_line\Persistence\obj\Debug\net5.0\Persistence.csproj.AssemblyReference.cache
+D:\Desktop\tribal\credit_line\Persistence\obj\Debug\net5.0\Persistence.GeneratedMSBuildEditorConfig.editorconfig
+D:\Desktop\tribal\credit_line\Persistence\obj\Debug\net5.0\Persistence.AssemblyInfoInputs.cache
+D:\Desktop\tribal\credit_line\Persistence\obj\Debug\net5.0\Persistence.AssemblyInfo.cs
+D:\Desktop\tribal\credit_line\Persistence\obj\Debug\net5.0\Persistence.csproj.CoreCompileInputs.cache
+D:\Desktop\tribal\credit_line\Persistence\obj\Debug\net5.0\Persistence.csproj.CopyComplete
+D:\Desktop\tribal\credit_line\Persistence\obj\Debug\net5.0\Persistence.dll
+D:\Desktop\tribal\credit_line\Persistence\obj\Debug\net5.0\ref\Persistence.dll
+D:\Desktop\tribal\credit_line\Persistence\obj\Debug\net5.0\Persistence.pdb
