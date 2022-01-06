@@ -108,7 +108,7 @@ namespace Application.CreditLine
                     {
                         //The system cannot receive a new requests in a 30 seconds period after a
                         //rejected credit line
-                        double timeGap = (DateTime.Now - (DateTime)clientTxn.LastValidRequest).TotalSeconds;
+                        double timeGap = (DateTime.Now - (DateTime)clientTxn.LastInvalidRequest).TotalSeconds;
                         if (timeGap < 30)
                         {
                             return new HttpResponseMessage(HttpStatusCode.TooManyRequests);
