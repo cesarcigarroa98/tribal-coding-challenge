@@ -93,12 +93,12 @@ namespace Application.CreditLine
                             _context.Update(clientTxn);
                             await _context.SaveChangesAsync();
 
-                            response.Content = new StringContent("Credit line already accepted");
+                            response.Content = new StringContent($"Credit line already accepted: {clientTxn.Credit.ToString()}");
                             return response;
                         }
                         else
                         {
-                            response.Content = new StringContent("Credit line already accepted");
+                            response.Content = new StringContent($"Credit line already accepted: {clientTxn.Credit.ToString()}");
                             return response;
                         }
                     }
@@ -120,6 +120,7 @@ namespace Application.CreditLine
                     if (IsValidCrdApplication(creditRequest))
                     {
                         clientTxn.LastValidRequest = DateTime.Now;
+                        clientTxn.Credit = creditRequest.RequestedCreditLine;
                         _context.Update(clientTxn);
                         await _context.SaveChangesAsync();
                         await dbContext.CommitAsync();

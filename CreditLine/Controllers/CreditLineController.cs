@@ -14,21 +14,19 @@ namespace CreditLine.Controllers
         private ICredit _credit;
         protected ICredit Credit => _credit ??= HttpContext.RequestServices
             .GetService<ICredit>();
-        //public CreditLineController(ICredit credit)
-        //{
-        //    _credit = credit;
-        //}
 
         [HttpPost("GetCredit")]
         public async Task<IActionResult> GetCredit(Models.CreditRequest creditRequest)
         {
             try
             {
-                String clientIPAddress = this.Request.HttpContext.Connection.RemoteIpAddress.ToString();
+                //Get client's IP address
+                String clientIPAddress = this.Request != null ?
+                    this.Request.HttpContext.Connection.RemoteIpAddress.ToString() : "1234";
 
-                HttpResponseMessage response = await _credit.VerifyCredit(creditRequest, clientIPAddress);
+                HttpResponseMessage response = await Credit.VerifyCredit(creditRequest, clientIPAddress);
 
-                return StatusCode((int)response.StatusCode, response.Content);
+                return StatusCode((int)response.StatusCode, response.Content.ReadAsStringAsync().Result);
 
             }
             catch (Exception)

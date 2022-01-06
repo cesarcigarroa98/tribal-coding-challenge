@@ -36,6 +36,8 @@ namespace CreditLine
                 logger.LogError(ex, "An error occurred during migration");
             }
 
+            host.Run();
+
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

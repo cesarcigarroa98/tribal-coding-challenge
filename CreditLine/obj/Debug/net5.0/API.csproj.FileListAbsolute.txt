@@ -44,3 +44,5 @@ D:\Desktop\tribal\credit_line\CreditLine\obj\Debug\net5.0\API.dll
 D:\Desktop\tribal\credit_line\CreditLine\obj\Debug\net5.0\ref\API.dll
 D:\Desktop\tribal\credit_line\CreditLine\obj\Debug\net5.0\API.pdb
 D:\Desktop\tribal\credit_line\CreditLine\obj\Debug\net5.0\API.genruntimeconfig.cache
+D:\Desktop\tribal\credit_line\CreditLine\bin\Debug\net5.0\Humanizer.dll
+D:\Desktop\tribal\credit_line\CreditLine\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Design.dll

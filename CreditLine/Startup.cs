@@ -39,7 +39,7 @@ namespace CreditLine
                 //Connect to postgres
                 options.UseNpgsql(connectionStr);
             });
-            services.AddScoped<ICredit, Credit>();
+            services.AddTransient<ICredit, Credit>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
